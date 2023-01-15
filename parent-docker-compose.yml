@@ -1,0 +1,40 @@
+version: '3.7'
+
+services:
+
+  mongodb:
+    image: mongo
+    expose:
+      - "27017"
+    ports:
+      - 27017:27017
+    networks:
+      - cataloger_net
+
+  cataloger_backend:
+    container_name: cataloger_backend
+    build: ./cataloger_backend
+    expose:
+      - "3000"
+    ports:
+      - 3000:3000
+    networks:
+      - cataloger_net
+    depends_on:
+      - mongodb
+
+  cataloger:
+    container_name: cataloger
+    build: ./cataloger
+    expose:
+      - "80"
+    ports:
+      - 80:80
+    networks:
+      - cataloger_net
+    depends_on:
+      - cataloger_backend
+
+networks:
+
+  cataloger_net:
